@@ -1,4 +1,5 @@
 {
     "name": "k8s-in-codespaces",
-    "image":"mcr.microsoft.com/devcontainers/universal:2"
+    "dockerFile": "Dockerfile"
+    //"image":"mcr.microsoft.com/devcontainers/universal:2"
 }
