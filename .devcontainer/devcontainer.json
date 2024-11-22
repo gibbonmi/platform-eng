@@ -40,5 +40,8 @@
 
 	"hostRequirements": {
 		"cpus": 2
-	}
+	},
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh"
 }
