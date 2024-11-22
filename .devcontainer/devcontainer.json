@@ -1,5 +1,44 @@
 {
     "name": "k8s-in-codespaces",
-    "dockerFile": "Dockerfile"
+    "dockerFile": "Dockerfile",
     //"image":"mcr.microsoft.com/devcontainers/universal:2"
+    "runArgs": ["--init", "--privileged", "--network=host"],
+	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
+	"overrideCommand": false,
+
+	// some base images require a specific user name
+	"remoteUser": "vscode",
+
+	// Install extensions
+	"customizations": {
+		"vscode": {	
+			// Set container specific settings
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "zsh"
+			},			
+			"extensions": []
+		}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		80,
+		4317,
+		4318,
+		30100,
+		30105
+	],
+
+	// add labels
+	"portsAttributes": {
+		"80": { "label": "Demo App" },
+		"30100": { "label": "ArgoCD" },
+		"30105": { "label": "Backstage" },
+		"4317": {"label": "OTEL Collector gRPC"},
+		"4318": {"label": "OTEL Collector HTTP"}
+	},
+
+	"hostRequirements": {
+		"cpus": 2
+	}
 }

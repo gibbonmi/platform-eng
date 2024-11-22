@@ -18,6 +18,16 @@ RUN apt-get update && \
     apt-get clean -y
 
 # INSTALL OF OTHER COMPONENTS
+# Install kubectl
+RUN curl -sSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
+    && chmod +x /usr/local/bin/kubectl
+
+# Install Helm
+RUN curl -s https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash -
+
+# Install kind
+RUN curl -sSL -o /usr/local/bin/kind https://kind.sigs.k8s.io/dl/$KIND_RELEASE/kind-linux-amd64 \
+    && chmod +x /usr/local/bin/kind
 
 RUN /tmp/scripts/docker.sh
 
