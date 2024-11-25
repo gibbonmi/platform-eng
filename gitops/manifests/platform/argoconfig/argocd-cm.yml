@@ -14,4 +14,4 @@ data:
   # Enables application status badge feature
   statusbadge.enabled: "true"
   context: |
-    argocdUrl: "https://super-duper-dollop-jjq579qpp67c5v5g-30100.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER"  
+    argocdUrl: "https://super-duper-dollop-jjq579qpp67c5v5g-30100.app.github.dev"  
