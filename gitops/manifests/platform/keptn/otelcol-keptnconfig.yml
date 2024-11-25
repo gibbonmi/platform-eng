@@ -6,7 +6,7 @@ metadata:
   namespace: keptn
 spec:
   type: dynatrace
-  targetServer: "DT_TENANT_LIVE_PLACEHOLDER"
+  targetServer: "https://eyb96555.live.dynatrace.com"
   secretKeyRef:
     name: dt-metrics-read-token
     key: DT_TOKEN
