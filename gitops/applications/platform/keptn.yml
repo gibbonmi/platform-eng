@@ -40,7 +40,7 @@ spec:
                   cpu: 5m
                   memory: 16Mi
 
-    - repoURL: "https://github.com/GITHUB_REPOSITORY_PLACEHOLDER.git"
+    - repoURL: "https://github.com/gibbonmi/platform-eng.git"
       targetRevision: main
       path: "gitops/manifests/platform/keptn"
   destination:
