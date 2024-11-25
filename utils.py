@@ -283,7 +283,65 @@ def get_geolocation(dt_env):
         return GEOLOCATION_LIVE
     else:
         return None
-    
+
+def upload_dt_workflow_asset(sso_token_url, path, name, dt_tenant_apps, upload_content_type="application/json"):
+
+    endpoint = f"{dt_tenant_apps}/platform/automation/v1/workflows"
+    permissions = "automation:workflows:write"
+
+    oauth_access_token = get_sso_auth_token(sso_token_url=sso_token_url, oauth_client_id=DT_OAUTH_CLIENT_ID, oauth_client_secret=DT_OAUTH_CLIENT_SECRET, oauth_urn=DT_OAUTH_ACCOUNT_URN, permissions=permissions)
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {oauth_access_token}"
+    }
+
+    with open(path, mode="r", encoding="UTF-8") as f:
+
+        file_content = f.read()
+        file_json = json.loads(file_content)
+
+        upload_resp = requests.post(
+            url=endpoint,
+            json=file_json,
+            headers=headers
+        )
+
+    return upload_resp
+
+def upload_dt_document_asset(sso_token_url, path, name, type, dt_tenant_apps, upload_content_type="application/json"):
+
+    if type != "notebook" and type != "dashboard":
+        exit("type must be one of these values: [notebook, dashboard]")
+
+    endpoint = f"{dt_tenant_apps}/platform/document/v1/documents"
+    permissions = "document:documents:write"
+
+    oauth_access_token = get_sso_auth_token(sso_token_url=sso_token_url, oauth_client_id=DT_OAUTH_CLIENT_ID, oauth_client_secret=DT_OAUTH_CLIENT_SECRET, oauth_urn=DT_OAUTH_ACCOUNT_URN, permissions=permissions)
+
+    headers = {
+        "accept": "application/json",
+        "Authorization": f"Bearer {oauth_access_token}"
+    }
+
+    with open(path, mode="r", encoding="UTF-8") as f:
+
+        file_content = f.read()
+
+        parameters = {
+            "name": name,
+            "type": type
+        }
+
+        upload_resp = requests.post(
+            url=endpoint,
+            params=parameters,
+            files={"content": (path, f"{file_content}", upload_content_type)},
+            headers=headers
+        )
+
+    return upload_resp
+
 def send_startup_ping():
     ## 1. Take lowercase GITHUB_ORG_SLASH_REPO and lowercase it.
     ## 2. For user privacy, calculate an irreversible one-way hash of this string

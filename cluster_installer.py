@@ -148,6 +148,21 @@ git_commit(target_file="-A", commit_msg="update GITHUB_CODESPACES_PORT_FORWARDIN
 
 #####################
 # placeholder for dt asset uploads
+###### Upload DT Assets
+# Notebooks
+type = "notebook"
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/analyze-argocd-notification-events.json", name="[devrel demo] ArgoCD: Analyze Notification Events", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/argocd-log-analytics.json", name="[devrel demo] ArgoCD: Log Analytics", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/platform-engineering-walkthrough.json", name="[devrel demo] Platform Engineering Demo Walkthrough", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# Dashboards
+type = "dashboard"
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-lifecycle-dashboard.json", name="[devrel demo] ArgoCD: Lifecycle Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-platform-observability.json", name="[devrel demo] ArgoCD: Platform Observability", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/backstage-error-analysis.json", name="[devrel demo] Backstage: Error Analysis", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/platform-observability-cockpit.json", name="[devrel demo] Platform Observability Cockpit", type=type, dt_tenant_apps=DT_TENANT_APPS)
+upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/team-ownership-dashboard.json", name="[devrel demo] Team Ownership Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# Workflows
+upload_dt_workflow_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/workflows/lifecycle-events-workflow.json", name="[devrel demo] Lifecycle Events Workflow", dt_tenant_apps=DT_TENANT_APPS)
 
 # start deploying the cluster
 
