@@ -85,15 +85,96 @@ do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_LIVE_PLACEHOLDER",
 do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_LIVE_PLACEHOLDER", replace_string=DT_TENANT_LIVE, recursive=True)
 git_commit(target_file="-A", commit_msg="update DT_TENANT_LIVE_PLACEHOLDER", push=False)
 
+# Find and replace DT_TENANT_APPS_PLACEHOLDER with real text eg. "https://abc12345.live.apps.dynatrace.com"
+do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
+do_file_replace(pattern="./apptemplates/docs/*.md", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=False)
+git_commit(target_file="-A", commit_msg="update DT_TENANT_APPS_PLACEHOLDER", push=False)
 
+# Find and replace GITHUB_DOT_COM_REPO_PLACEHOLDER with real text eg. "https://github.com/yourOrg/yourRepo.git"
+do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_DOT_COM_REPO_PLACEHOLDER", replace_string=GITHUB_DOT_COM_REPO, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GITHUB_DOT_COM_REPO_PLACEHOLDER", replace_string=GITHUB_DOT_COM_REPO, recursive=True)
+git_commit(target_file="-A", commit_msg="update GITHUB_DOT_COM_REPO_PLACEHOLDER", push=False)
 
+# Find and replace GEOLOCATION_PLACEHOLDER with real text. eg. "GEOLOCATION-0A41430434C388A9"
+do_file_replace(pattern="./**/*.y*ml", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
+git_commit(target_file="-A", commit_msg="update GEOLOCATION_PLACEHOLDER", push=False)
 
+# Find and replace GITHUB_REPOSITORY_PLACEHOLDER with real text. eg "yourOrg/yourRepo"
+do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_REPOSITORY_PLACEHOLDER", replace_string=GITHUB_ORG_SLASH_REPOSITORY, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GITHUB_REPOSITORY_PLACEHOLDER", replace_string=GITHUB_ORG_SLASH_REPOSITORY, recursive=True)
+do_file_replace(pattern="./apptemplates/docs/*.md", find_string="GITHUB_REPOSITORY_PLACEHOLDER", replace_string=GITHUB_ORG_SLASH_REPOSITORY, recursive=False)
+git_commit(target_file="-A", commit_msg="update GITHUB_REPOSITORY_PLACEHOLDER", push=False)
+
+# Find and replace GITHUB_REPO_NAME_PLACEHOLDER with real text. eg. `yourRepo`
+do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_REPO_NAME_PLACEHOLDER", replace_string=GITHUB_REPO_NAME, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GITHUB_REPO_NAME_PLACEHOLDER", replace_string=GITHUB_REPO_NAME, recursive=True)
+git_commit(target_file="-A", commit_msg="update GITHUB_REPO_NAME_PLACEHOLDER", push=False)
+
+github_org = get_github_org(github_repo=GITHUB_ORG_SLASH_REPOSITORY)
+# Find and replace GITHUB_ORG_NAME_PLACEHOLDER with real text. eg. `yourOrg`
+do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_ORG_NAME_PLACEHOLDER", replace_string=github_org, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GITHUB_ORG_NAME_PLACEHOLDER", replace_string=github_org, recursive=True)
+git_commit(target_file="-A", commit_msg="update GITHUB_ORG_NAME_PLACEHOLDER", push=False)
+
+# Find and replace CODESPACE_NAME_PLACEHOLDER with real text. eg. `fantastic-onion-123ab233`
+do_file_replace(pattern="./**/*.y*ml", find_string="CODESPACE_NAME_PLACEHOLDER", replace_string=CODESPACE_NAME, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="CODESPACE_NAME_PLACEHOLDER", replace_string=CODESPACE_NAME, recursive=True)
+do_file_replace(pattern="./apptemplates/docs/*.md", find_string="CODESPACE_NAME_PLACEHOLDER", replace_string=CODESPACE_NAME, recursive=False)
+git_commit(target_file="-A", commit_msg="update CODESPACE_NAME_PLACEHOLDER", push=False)
+
+# Find and replace ARGOCD_PORT_NUMBER_PLACEHOLDER with real text. eg. `30100`
+do_file_replace(pattern="./**/*.y*ml", find_string="ARGOCD_PORT_NUMBER_PLACEHOLDER", replace_string=f"{ARGOCD_PORT_NUMBER}", recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="ARGOCD_PORT_NUMBER_PLACEHOLDER", replace_string=f"{ARGOCD_PORT_NUMBER}", recursive=True)
+do_file_replace(pattern="./apptemplates/docs/*.md", find_string="ARGOCD_PORT_NUMBER_PLACEHOLDER", replace_string=f"{ARGOCD_PORT_NUMBER}", recursive=False)
+git_commit(target_file="-A", commit_msg="update ARGOCD_PORT_NUMBER_PLACEHOLDER", push=False)
+
+# Find and replace DEMO_APP_PORT_NUMBER_PLACEHOLDER with real text. eg. `80`
+do_file_replace(pattern="./**/*.y*ml", find_string="DEMO_APP_PORT_NUMBER_PLACEHOLDER", replace_string=f"{DEMO_APP_PORT_NUMBER}", recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="DEMO_APP_PORT_NUMBER_PLACEHOLDER", replace_string=f"{DEMO_APP_PORT_NUMBER}", recursive=True)
+git_commit(target_file="-A", commit_msg="update DEMO_APP_PORT_NUMBER_PLACEHOLDER", push=False)
+
+# Find and replace BACKSTAGE_PORT_NUMBER_PLACEHOLDER with real text. eg. `30105`
+do_file_replace(pattern="./**/*.y*ml", find_string="BACKSTAGE_PORT_NUMBER_PLACEHOLDER", replace_string=f"{BACKSTAGE_PORT_NUMBER}", recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="BACKSTAGE_PORT_NUMBER_PLACEHOLDER", replace_string=f"{BACKSTAGE_PORT_NUMBER}", recursive=True)
+git_commit(target_file="-A", commit_msg="update BACKSTAGE_PORT_NUMBER_PLACEHOLDER", push=False)
+
+# Find and replace GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER with real text. eg. `.app.github.dev`
+do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER", replace_string=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN, recursive=True)
+do_file_replace(pattern="./**/*.json", find_string="GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER", replace_string=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN, recursive=True)
+do_file_replace(pattern="./apptemplates/docs/*.md", find_string="GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER", replace_string=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN, recursive=False)
+git_commit(target_file="-A", commit_msg="update GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER", push=True)
+
+#####################
+# placeholder for dt asset uploads
+
+# start deploying the cluster
 
 # create kind cluster
 output = run_command(["kind", "create", "cluster", "--config", ".devcontainer/kind-cluster.yml", "--wait", STANDARD_TIMEOUT])
 
 # create namespaces
-namespaces = ["argocd"]
+namespaces = ["argocd", "opentelemetry", "backstage", "monaco", "dynatrace"]
 
 for namespace in namespaces:
     output = run_command(["kubectl", "create", "namespace", namespace])
+
+# Create Github API token
+# Which the argo appset will use when polling GitHub's API
+# If un-authenticated API access is used, we hit 403 rate throttling.
+# See also: gitops/manifests/platform/argoconfig/appset.yml
+output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic" ,"github-token", f"--from-literal=token={GITHUB_TOKEN}"])
+
+# Create bizevent secrets
+output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
+output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
+
+# Install argocd
+print(f"Installing argo cd version: {ARGOCD_VERSION}")
+output = run_command(["kubectl", "apply", "-n", "argocd", "-f", f"https://raw.githubusercontent.com/argoproj/argo-cd/{ARGOCD_VERSION}/manifests/install.yaml"])
+
+output = run_command(["kubectl", "wait", "--for=condition=Available=True", "deployments", "-n", "argocd", "--all", f"--timeout={STANDARD_TIMEOUT}"])
+
+# Configure argocd
+

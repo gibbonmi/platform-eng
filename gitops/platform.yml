@@ -1,0 +1,2 @@
+apiVersion: agroproj.io/v1alpha1
+kind: Application
