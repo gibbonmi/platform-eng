@@ -8,4 +8,4 @@ COLLECTOR_WAIT_TIMEOUT_SECONDS = 300
 
 def test_ensure_namespaces_exists():
     output = run_command(["kubectl", "get", "namespaces"])
-    assert argocd
+    assert "argocd" in output.stdout
