@@ -10,7 +10,7 @@ metadata:
   namespace: argocd
 spec:
   sources:
-    - repoURL: "GITHUB_DOT_COM_REPO_PLACEHOLDER"
+    - repoURL: "https://github.com/gibbonmi/platform-eng.git"
       targetRevision: main
       path: "gitops/manifests/platform/kubeaudit"
   destination:
