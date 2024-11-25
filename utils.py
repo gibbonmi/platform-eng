@@ -127,6 +127,68 @@ def hash_string(input_str, charset="UTF-8", algorithm="SHA256"):
 ##############################
 # DT FUNCTIONS
 
+def send_log_to_dt_or_otel_collector(success, msg_string="", dt_api_token="", endpoint=get_otel_collector_endpoint(), destroy_codespace=False, dt_tenant_live=""):
+
+    attributes_list = [{"key": "success", "value": { "boolean": success }}]
+
+    timestamp = str(time.time_ns())
+
+    if "dynatrace" in endpoint:
+        # Local collector not available
+        # Send directly to cluster
+        payload = {
+            "content": msg_string,
+            "log.source": "testharness.py",
+            "severity": "error"
+        }
+
+        headers = {
+            "accept": "application/json; charset=utf-8",
+            "Authorization": f"Api-Token {dt_api_token}",
+            "Content-Type": "application/json"
+        }
+
+        requests.post(f"{dt_tenant_live}/api/v2/logs/ingest", 
+          headers = headers,
+          json=payload,
+          timeout=5
+        )
+    else: # Send via local OTEL collector
+        payload = {
+            "resourceLogs": [{
+                "resource": {
+                    "attributes": []
+                },
+                "scopeLogs": [{
+                    "scope": {},
+                    "logRecords": [{
+                        "timeUnixNano": timestamp,
+                        "body": {
+                            "stringValue": msg_string
+                        },
+                        "attributes": attributes_list,
+                        "droppedAttributesCount": 0
+                    }]
+                }]
+            }]
+        }
+
+        requests.post(f"{endpoint}/v1/logs", headers={ "Content-Type": "application/json" }, json=payload, timeout=5)
+
+    # If user wishes to immediately
+    # destroy the codespace, do it now
+    # Note: Log lines inside here must have destroy_codespace=False to avoid circular calls
+    destroy_codespace = False # DEBUG: TODO remove. Temporarily override while developing
+    if destroy_codespace:
+        send_log_to_dt_or_otel_collector(success=True, msg_string=f"Destroying codespace: {CODESPACE_NAME}", destroy_codespace=False, dt_tenant_live=dt_tenant_live)
+
+        destroy_codespace_output = subprocess.run(["gh", "codespace", "delete", "--codespace", CODESPACE_NAME], capture_output=True, text=True)
+
+        if destroy_codespace_output.returncode == 0:
+            send_log_to_dt_or_otel_collector(success=True, msg_string=f"codespace {CODESPACE_NAME} deleted successfully", destroy_codespace=False, dt_tenant_live=dt_tenant_live)
+        else:
+            send_log_to_dt_or_otel_collector(success=False, msg_string=f"failed to delete codespace {CODESPACE_NAME}. {destroy_codespace_output.stderr}", destroy_codespace=False, dt_tenant_live=dt_tenant_live)
+
 def build_dt_urls(dt_env, dt_env_name):
     if dt_env.lower() == "live":
         dt_tenant_apps = f"https://{dt_env_name}.apps.dynatrace.com"
