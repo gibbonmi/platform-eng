@@ -177,4 +177,30 @@ output = run_command(["kubectl", "apply", "-n", "argocd", "-f", f"https://raw.gi
 output = run_command(["kubectl", "wait", "--for=condition=Available=True", "deployments", "-n", "argocd", "--all", f"--timeout={STANDARD_TIMEOUT}"])
 
 # Configure argocd
+output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifests/platform/argoconfig/argocd-cm.yml"])
+output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifests/platform/argoconfig/argocd-no-tls.yml"])
+output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifests/platform/argoconfig/argocd-nodeport.yml"])
 
+# Create argocd-notifications-secret (delete if already there)
+output = run_command(["kubectl", "-n", "argocd", "delete", "secret", "argocd-notifications-secret", "--ignore-not-found"])
+output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic", "argocd-notifications-secret", f"--from-literal=dynatrace-url={DT_TENANT_LIVE}", f"--from-literal=dynatrace-token={DT_ALL_INGEST_TOKEN}"])
+output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=0"])
+output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=1"])
+
+# Restart argo server
+output = run_command(["kubectl", "-n", "argocd", "scale", "deployment/argocd-server", "--replicas", "0"])
+output = run_command(["kubectl", "-n", "argocd", "scale", "deployment/argocd-server", "--replicas", "1"])
+
+# Wait until argo server exists (or timeout is hit)
+output = run_command(["kubectl", "-n", "argocd", "wait", "--for=jsonpath={.status.readyReplicas}=1", "deployment", "--selector=app.kubernetes.io/name=argocd-server", "--timeout", "2m"])
+
+# Apply platform
+output = run_command(["kubectl", "apply", "-f", "gitops/platform.yml"])
+
+# Wait until argo secret exists (or timeout is hit)
+wait_for_artifact_to_exist(namespace="argocd", artifact_type="secret", artifact_name="argocd-initial-admin-secret")
+
+# Set the default context to the argocd namespace so 'argocd' CLI works
+output = run_command(["kubectl", "config", "set-context", "--current", "--namespace=argocd"])
+# Now authenticate
+output = run_command(["argocd", "login", "argo", "--core"])
