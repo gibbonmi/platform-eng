@@ -11,3 +11,6 @@ output = run_command(["kind", "create", "cluster", "--config", ".devcontainer/ki
 
 # create namespaces
 namespaces = ["argocd"]
+
+for namespace in namespaces:
+    output = run_command(["kubectl", "create", "namespace", namespace])
