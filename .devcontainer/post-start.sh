@@ -2,4 +2,4 @@
 
 # Run tests
 export PYTEST_RUN_NAME=startup-automated-test
-pytest --export-traces codespaces_test.py
+pytest --export-traces startup_test.py

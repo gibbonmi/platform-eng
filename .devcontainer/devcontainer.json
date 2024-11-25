@@ -44,5 +44,5 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "chmod +x .devcontainer/post-create.sh && .devcontainer/post-create.sh",
-	"postStartCommand": ""
+	"postStartCommand": "chmod +x .devcontainer/post-start.sh && .devcontainer/post-start.sh"
 }
