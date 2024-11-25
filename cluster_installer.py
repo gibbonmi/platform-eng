@@ -204,3 +204,65 @@ wait_for_artifact_to_exist(namespace="argocd", artifact_type="secret", artifact_
 output = run_command(["kubectl", "config", "set-context", "--current", "--namespace=argocd"])
 # Now authenticate
 output = run_command(["argocd", "login", "argo", "--core"])
+
+# Wait until argo account 'alice' exists (or timeout is hit)
+count = 1
+get_argo_accounts_output = ""
+while count < WAIT_FOR_ACCOUNTS_TIMEOUT and "alice" not in get_argo_accounts_output:
+    print(f"Waiting for argo account alice to exist. Wait count: {count}")
+    count += 1
+    get_argo_accounts_output = run_command(["argocd", "account", "list"]).stdout
+    time.sleep(1)
+
+if get_argo_accounts_output == "":
+    exit(f"ArgoCD Account alice does not exist. Cannot proceed.")
+
+ARGOCD_TOKEN = run_command(["argocd", "account", "generate-token", "--account", "alice"]).stdout
+
+if ARGOCD_TOKEN is None or ARGOCD_TOKEN == "":
+    exit(f"ARGOCD_TOKEN is empty: {ARGOCD_TOKEN}. Cannot proceed!")
+
+# create dt-details secret in opentelemetry namespace
+output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-details", f"--from-literal=DT_URL={DT_TENANT_LIVE}", f"--from-literal=DT_OTEL_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"])
+
+# create backstage-details secret in backstage namespace
+output = run_command(["kubectl", "-n", "backstage", "create", "secret", "generic", "backstage-secrets",
+                      f"--from-literal=BASE_DOMAIN={CODESPACE_NAME}",
+                      f"--from-literal=BACKSTAGE_PORT_NUMBER={BACKSTAGE_PORT_NUMBER}",
+                      f"--from-literal=ARGOCD_PORT_NUMBER={ARGOCD_PORT_NUMBER}",
+                      f"--from-literal=ARGOCD_TOKEN={ARGOCD_TOKEN}",
+                      f"--from-literal=GITHUB_TOKEN={GITHUB_TOKEN}",
+                      f"--from-literal=GITHUB_ORG={github_org}",
+                      f"--from-literal=GITHUB_REPO={GITHUB_REPO_NAME}",
+                      f"--from-literal=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN={GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
+                      f"--from-literal=DT_TENANT_NAME={DT_ENV_NAME}",
+                      f"--from-literal=DT_TENANT_LIVE={DT_TENANT_LIVE}",
+                      f"--from-literal=DT_TENANT_APPS={DT_TENANT_APPS}",
+                      f"--from-literal=DT_SSO_TOKEN_URL={DT_SSO_TOKEN_URL}",
+                      f"--from-literal=DT_OAUTH_CLIENT_ID={DT_OAUTH_CLIENT_ID}",
+                      f"--from-literal=DT_OAUTH_CLIENT_SECRET={DT_OAUTH_CLIENT_SECRET}",
+                      f"--from-literal=DT_OAUTH_ACCOUNT_URN={DT_OAUTH_ACCOUNT_URN}",
+                      f"--from-literal=DT_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"
+                    ])
+# Create secret for OneAgent in dynatrace namespace
+output = run_command([
+    "kubectl", "-n", "dynatrace", "create", "secret", "generic", "platform-engineering-demo",
+    f"--from-literal=apiToken={DT_OP_TOKEN}",
+    f"--from-literal=dataIngestToken={DT_ALL_INGEST_TOKEN}"
+    ])
+
+# Create monaco-secret in monaco namespace
+output = run_command(["kubectl", "-n", "monaco", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
+# Create monaco-secret in dynatrace namespace
+output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
+
+# Wait for backstage deployment to be created
+wait_for_artifact_to_exist(namespace="backstage", artifact_type="deployment", artifact_name="backstage")
+
+# backstage deployment is ready
+# restart backstage to pick up secret and start successfully
+output = run_command(["kubectl", "-n", "backstage", "rollout", "restart", "deployment/backstage"])
+output = run_command(["kubectl", "-n", "backstage", "rollout", "status", "deployment/backstage", f"--timeout={STANDARD_TIMEOUT}"])
+
+# Send startup ping
+send_startup_ping()
