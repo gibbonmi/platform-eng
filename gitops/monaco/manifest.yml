@@ -17,7 +17,7 @@ environmentGroups:
             name: "monacoToken" 
       - name: prod-api-and-oauth
         url:
-          value: "DT_TENANT_APPS_PLACEHOLDER"
+          value: "https://eyb96555.apps.dynatrace.com"
         auth:
           token:
             name: "monacoToken"
