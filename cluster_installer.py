@@ -170,7 +170,7 @@ upload_dt_workflow_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/w
 output = run_command(["kind", "create", "cluster", "--config", ".devcontainer/kind-cluster.yml", "--wait", STANDARD_TIMEOUT])
 
 # create namespaces
-namespaces = ["argocd", "opentelemetry", "backstage", "monaco", "dynatrace"]
+namespaces = ["argocd", "opentelemetry", "backstage", "monaco", "dynatrace", "argo-rollouts", "cert-manager", "ingress-nginx", "keptn", "kubeaudit", "open-feature-operator-system"]
 
 for namespace in namespaces:
     output = run_command(["kubectl", "create", "namespace", namespace])
