@@ -3,7 +3,7 @@ configs:
   config:
     name: "Healthcheck ${{ values.projectName }}-${{ values.teamIdentifier }}-${{ values.releaseStage }}"
     parameters:
-      baseUrl: "https://miniature-guacamole-wrg75xgqpwjhg569-DEMO_APP_PORT_NUMBER_PLACEHOLDER.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER/${{ values.projectName }}-${{ values.teamIdentifier }}-${{ values.releaseStage }}"
+      baseUrl: "https://miniature-guacamole-wrg75xgqpwjhg569-80.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN_PLACEHOLDER/${{ values.projectName }}-${{ values.teamIdentifier }}-${{ values.releaseStage }}"
       frequencyMin: "1"
       enabled: "true"
       geoLocation: "GEOLOCATION-45AB48D9D6925ECC"
