@@ -126,36 +126,36 @@ data:
       clusterLocatorMethods:
         - type: config
           clusters: []
-    proxy:
-      endpoints:
-        '/dteventingest':
-          target: "${DT_TENANT_LIVE}/api/v2/events/ingest"
-          method: "POST"
-          headers:
-            Content-Type: "application/json; charset=utf-8"
-            Authorization: "Api-Token ${DT_ALL_INGEST_TOKEN}"
-    dynatrace:
-      environments:
-        - name: ${DT_TENANT_NAME}
-          url: ${DT_TENANT_APPS}
-          tokenUrl: ${DT_SSO_TOKEN_URL}
-          accountUrn: ${DT_OAUTH_ACCOUNT_URN}
-          clientId: ${DT_OAUTH_CLIENT_ID}
-          clientSecret: ${DT_OAUTH_CLIENT_SECRET}
-      queries:
-      - id: logs
-        query: >
-          fetch logs
-          | filter contains(k8s.namespace.name, "$${componentName}")
-          | filter content != " "
-          | fields timestamp, content 
-          | sort timestamp
-          | limit 10
-      - id: validations
-        query: >
-          fetch bizevents
-          | filter event.type == "guardian.validation.finished"
-          | parse execution_context, "JSON:context"
-          | filter contains(context[component_name], "$${componentName}")
-          | sort timestamp desc
-          | fields timestamp, name=guardian.name, buildId=context[buildId], status=validation.status, executionId=validation.workflow.execution.id
+    # proxy:
+    #   endpoints:
+    #     '/dteventingest':
+    #       target: "${DT_TENANT_LIVE}/api/v2/events/ingest"
+    #       method: "POST"
+    #       headers:
+    #         Content-Type: "application/json; charset=utf-8"
+    #         Authorization: "Api-Token ${DT_ALL_INGEST_TOKEN}"
+    # dynatrace:
+    #   environments:
+    #     - name: ${DT_TENANT_NAME}
+    #       url: ${DT_TENANT_APPS}
+    #       tokenUrl: ${DT_SSO_TOKEN_URL}
+    #       accountUrn: ${DT_OAUTH_ACCOUNT_URN}
+    #       clientId: ${DT_OAUTH_CLIENT_ID}
+    #       clientSecret: ${DT_OAUTH_CLIENT_SECRET}
+    #   queries:
+    #   - id: logs
+    #     query: >
+    #       fetch logs
+    #       | filter contains(k8s.namespace.name, "$${componentName}")
+    #       | filter content != " "
+    #       | fields timestamp, content 
+    #       | sort timestamp
+    #       | limit 10
+    #   - id: validations
+    #     query: >
+    #       fetch bizevents
+    #       | filter event.type == "guardian.validation.finished"
+    #       | parse execution_context, "JSON:context"
+    #       | filter contains(context[component_name], "$${componentName}")
+    #       | sort timestamp desc
+    #       | fields timestamp, name=guardian.name, buildId=context[buildId], status=validation.status, executionId=validation.workflow.execution.id
