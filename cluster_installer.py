@@ -170,7 +170,19 @@ type = "notebook"
 output = run_command(["kind", "create", "cluster", "--config", ".devcontainer/kind-cluster.yml", "--wait", STANDARD_TIMEOUT])
 
 # create namespaces
-namespaces = ["argocd", "opentelemetry", "backstage", "monaco", "dynatrace", "argo-rollouts", "cert-manager", "ingress-nginx", "keptn", "kubeaudit", "open-feature-operator-system"]
+namespaces = [
+    "argocd"
+    , "opentelemetry"
+    , "backstage"
+    , "monaco"
+    , "dynatrace"
+    , "argo-rollouts"
+    , "cert-manager"
+    , "ingress-nginx"
+    , "keptn"
+    , "kubeaudit"
+    , "open-feature-operator-system"
+]
 
 for namespace in namespaces:
     output = run_command(["kubectl", "create", "namespace", namespace])
@@ -197,10 +209,10 @@ output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifest
 output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifests/platform/argoconfig/argocd-nodeport.yml"])
 
 # Create argocd-notifications-secret (delete if already there)
-output = run_command(["kubectl", "-n", "argocd", "delete", "secret", "argocd-notifications-secret", "--ignore-not-found"])
+# output = run_command(["kubectl", "-n", "argocd", "delete", "secret", "argocd-notifications-secret", "--ignore-not-found"])
 # output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic", "argocd-notifications-secret", f"--from-literal=dynatrace-url={DT_TENANT_LIVE}", f"--from-literal=dynatrace-token={DT_ALL_INGEST_TOKEN}"])
-output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=0"])
-output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=1"])
+# output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=0"])
+# output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=1"])
 
 # Restart argo server
 output = run_command(["kubectl", "-n", "argocd", "scale", "deployment/argocd-server", "--replicas", "0"])
