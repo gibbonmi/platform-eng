@@ -202,30 +202,30 @@ spec:
           description: "Tick this box if you want email updates on this item to be sent from the platform team."
           type: boolean
           default: true
-  steps:
-    - id: send-event
-      name: Submit Feedback
-      action: http:backstage:request
-      input:
-        method: "POST"
-        # This proxy is set in app-config.production.yaml
-        # It should actually point to the bizevent ingest
-        # But I don't know how to use backstage + oAuth
-        # Q in #backstage: https://cloud-native.slack.com/archives/C01B5HYR2R3/p1701406188130209
-        path: "/proxy/dteventingest"
-        headers:
-          Content-Type: "application/json; charset=utf-8"
-        body: |
-          {
-            "eventType": "CUSTOM_INFO",
-            "properties": {
-              "type": "${{ parameters.feedbackType }}",
-              "user": "${{ parameters.userIdentifier }}",
-              "feedback": "${{ parameters.feedback }}",
-              "stay-informed": "${{ parameters.keepMeInformed }}",
-              "source": "backstage",
-              "template": "platform-feedback"
-            },
-            "timeout": 1,
-            "title": "ℹ️ Platform Feedback ℹ️"
-          }
+  # steps:
+  #   - id: send-event
+  #     name: Submit Feedback
+  #     action: http:backstage:request
+  #     input:
+  #       method: "POST"
+  #       # This proxy is set in app-config.production.yaml
+  #       # It should actually point to the bizevent ingest
+  #       # But I don't know how to use backstage + oAuth
+  #       # Q in #backstage: https://cloud-native.slack.com/archives/C01B5HYR2R3/p1701406188130209
+  #       path: "/proxy/dteventingest"
+  #       headers:
+  #         Content-Type: "application/json; charset=utf-8"
+  #       body: |
+  #         {
+  #           "eventType": "CUSTOM_INFO",
+  #           "properties": {
+  #             "type": "${{ parameters.feedbackType }}",
+  #             "user": "${{ parameters.userIdentifier }}",
+  #             "feedback": "${{ parameters.feedback }}",
+  #             "stay-informed": "${{ parameters.keepMeInformed }}",
+  #             "source": "backstage",
+  #             "template": "platform-feedback"
+  #           },
+  #           "timeout": 1,
+  #           "title": "ℹ️ Platform Feedback ℹ️"
+  #         }
