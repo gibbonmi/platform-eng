@@ -261,7 +261,7 @@ output = run_command(["kubectl", "-n", "backstage", "create", "secret", "generic
                       f"--from-literal=GITHUB_TOKEN={GITHUB_TOKEN}",
                       f"--from-literal=GITHUB_ORG={github_org}",
                       f"--from-literal=GITHUB_REPO={GITHUB_REPO_NAME}",
-                      f"--from-literal=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN={GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
+                      f"--from-literal=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN={GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}"#,
 #                       f"--from-literal=DT_TENANT_NAME={DT_ENV_NAME}",
 #                       f"--from-literal=DT_TENANT_LIVE={DT_TENANT_LIVE}",
 #                       f"--from-literal=DT_TENANT_APPS={DT_TENANT_APPS}",
