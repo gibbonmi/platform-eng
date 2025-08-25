@@ -3,71 +3,71 @@ from utils import *
 
 ARGOCD_VERSION="v2.12.2"
 
-if (
-    DT_RW_API_TOKEN is None or
-    DT_ENV_NAME is None or
-    DT_ENV is None or
-    DT_OAUTH_CLIENT_ID is None or
-    DT_OAUTH_CLIENT_SECRET is None or
-    DT_OAUTH_ACCOUNT_URN is None
-):
-    exit("Missing mandatory environment variables. Cannot proceed. Exiting.")
+# if (
+#     DT_RW_API_TOKEN is None or
+#     DT_ENV_NAME is None or
+#     DT_ENV is None or
+#     DT_OAUTH_CLIENT_ID is None or
+#     DT_OAUTH_CLIENT_SECRET is None or
+#     DT_OAUTH_ACCOUNT_URN is None
+# ):
+#     exit("Missing mandatory environment variables. Cannot proceed. Exiting.")
 
 # Build DT environment URLs
-DT_TENANT_APPS, DT_TENANT_LIVE = build_dt_urls(dt_env_name=DT_ENV_NAME, dt_env=DT_ENV)
+# DT_TENANT_APPS, DT_TENANT_LIVE = build_dt_urls(dt_env_name=DT_ENV_NAME, dt_env=DT_ENV)
 
-# Get correct SSO URL
-DT_SSO_TOKEN_URL = get_sso_token_url(dt_env=DT_ENV)
+# # Get correct SSO URL
+# DT_SSO_TOKEN_URL = get_sso_token_url(dt_env=DT_ENV)
 
-# Create other DT Tokens
-DT_ALL_INGEST_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_ALL_INGEST_TOKEN", scopes=[
-    "bizevents.ingest",
-    "events.ingest",
-    "logs.ingest",
-    "metrics.ingest",
-    "openTelemetryTrace.ingest",
-    "DataExport", 
-    "entities.read", 
-    "settings.read", 
-    "settings.write", 
-    "activeGateTokenManagement.create"
-], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
-DT_OP_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_OP_TOKEN", scopes=[
-    "InstallerDownload",
-    "DataExport", 
-    "entities.read", 
-    "settings.read",
-    "settings.write", 
-    "activeGateTokenManagement.create"
-    ], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
-DT_MONACO_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_MONACO_TOKEN", scopes=[
-    "settings.read",
-    "settings.write",
-    "slo.read",
-    "slo.write",
-    "DataExport",
-    "ExternalSyntheticIntegration",
-    "ReadConfig",
-    "WriteConfig"
-], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
+# # Create other DT Tokens
+# DT_ALL_INGEST_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_ALL_INGEST_TOKEN", scopes=[
+#     "bizevents.ingest",
+#     "events.ingest",
+#     "logs.ingest",
+#     "metrics.ingest",
+#     "openTelemetryTrace.ingest",
+#     "DataExport", 
+#     "entities.read", 
+#     "settings.read", 
+#     "settings.write", 
+#     "activeGateTokenManagement.create"
+# ], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
+# DT_OP_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_OP_TOKEN", scopes=[
+#     "InstallerDownload",
+#     "DataExport", 
+#     "entities.read", 
+#     "settings.read",
+#     "settings.write", 
+#     "activeGateTokenManagement.create"
+#     ], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
+# DT_MONACO_TOKEN = create_dt_api_token(token_name="[devrel demo] DT_MONACO_TOKEN", scopes=[
+#     "settings.read",
+#     "settings.write",
+#     "slo.read",
+#     "slo.write",
+#     "DataExport",
+#     "ExternalSyntheticIntegration",
+#     "ReadConfig",
+#     "WriteConfig"
+# ], dt_rw_api_token=DT_RW_API_TOKEN, dt_tenant_live=DT_TENANT_LIVE)
 
 ## Keptn
 # Should Keptn be installed or not?
-INSTALL_KEPTN = os.environ.get("INSTALL_KEPTN", "true")
+# INSTALL_KEPTN = os.environ.get("INSTALL_KEPTN", "true")
 
-if INSTALL_KEPTN.lower() == "false" or INSTALL_KEPTN.lower() == "no":
-    # Rename files to prevent installation by argoCD
-    try:
-        os.rename(src="gitops/applications/platform/keptn.yml", dst="gitops/applications/platform/keptn.yml.BAK")
-        os.rename(src="gitops/manifests/platform/keptn/keptn-metrics.yml", dst="gitops/manifests/platform/keptn/keptn-metrics.yml.BAK")
-        os.rename(src="gitops/manifests/platform/keptn/otelcol-keptnconfig.yml", dst="gitops/manifests/platform/keptn/otelcol-keptnconfig.yml.BAK")
-        git_commit(target_file="-A", commit_msg="do not install Keptn", push=True)
-    except:
-        print("Exception caught renaming (to remove) Keptn files. No big deal. You're probably re-running this script. Continuing.")
+# if INSTALL_KEPTN.lower() == "false" or INSTALL_KEPTN.lower() == "no":
+#     # Rename files to prevent installation by argoCD
+#     try:
+#         os.rename(src="gitops/applications/platform/keptn.yml", dst="gitops/applications/platform/keptn.yml.BAK")
+#         os.rename(src="gitops/manifests/platform/keptn/keptn-metrics.yml", dst="gitops/manifests/platform/keptn/keptn-metrics.yml.BAK")
+#         os.rename(src="gitops/manifests/platform/keptn/otelcol-keptnconfig.yml", dst="gitops/manifests/platform/keptn/otelcol-keptnconfig.yml.BAK")
+#         git_commit(target_file="-A", commit_msg="do not install Keptn", push=True)
+#     except:
+#         print("Exception caught renaming (to remove) Keptn files. No big deal. You're probably re-running this script. Continuing.")
 
-# Set DT GEOLOCATION based on env type used
-# TODO: Find a better way here. If this was widely used, all load would be on one GEOLOCATION.
-DT_GEOLOCATION = get_geolocation(dt_env=DT_ENV)
+# # Set DT GEOLOCATION based on env type used
+# # TODO: Find a better way here. If this was widely used, all load would be on one GEOLOCATION.
+# DT_GEOLOCATION = get_geolocation(dt_env=DT_ENV)
 
 ###################################
 
@@ -151,18 +151,18 @@ git_commit(target_file="-A", commit_msg="update GITHUB_CODESPACES_PORT_FORWARDIN
 ###### Upload DT Assets
 # Notebooks
 type = "notebook"
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/analyze-argocd-notification-events.json", name="[devrel demo] ArgoCD: Analyze Notification Events", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/argocd-log-analytics.json", name="[devrel demo] ArgoCD: Log Analytics", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/platform-engineering-walkthrough.json", name="[devrel demo] Platform Engineering Demo Walkthrough", type=type, dt_tenant_apps=DT_TENANT_APPS)
-# Dashboards
-type = "dashboard"
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-lifecycle-dashboard.json", name="[devrel demo] ArgoCD: Lifecycle Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-platform-observability.json", name="[devrel demo] ArgoCD: Platform Observability", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/backstage-error-analysis.json", name="[devrel demo] Backstage: Error Analysis", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/platform-observability-cockpit.json", name="[devrel demo] Platform Observability Cockpit", type=type, dt_tenant_apps=DT_TENANT_APPS)
-upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/team-ownership-dashboard.json", name="[devrel demo] Team Ownership Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
-# Workflows
-upload_dt_workflow_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/workflows/lifecycle-events-workflow.json", name="[devrel demo] Lifecycle Events Workflow", dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/analyze-argocd-notification-events.json", name="[devrel demo] ArgoCD: Analyze Notification Events", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/argocd-log-analytics.json", name="[devrel demo] ArgoCD: Log Analytics", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/notebooks/platform-engineering-walkthrough.json", name="[devrel demo] Platform Engineering Demo Walkthrough", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# # Dashboards
+# type = "dashboard"
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-lifecycle-dashboard.json", name="[devrel demo] ArgoCD: Lifecycle Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/argocd-platform-observability.json", name="[devrel demo] ArgoCD: Platform Observability", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/backstage-error-analysis.json", name="[devrel demo] Backstage: Error Analysis", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/platform-observability-cockpit.json", name="[devrel demo] Platform Observability Cockpit", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# upload_dt_document_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/dashboards/team-ownership-dashboard.json", name="[devrel demo] Team Ownership Dashboard", type=type, dt_tenant_apps=DT_TENANT_APPS)
+# # Workflows
+# upload_dt_workflow_asset(sso_token_url=DT_SSO_TOKEN_URL, path="dynatraceassets/workflows/lifecycle-events-workflow.json", name="[devrel demo] Lifecycle Events Workflow", dt_tenant_apps=DT_TENANT_APPS)
 
 # start deploying the cluster
 
@@ -182,8 +182,8 @@ for namespace in namespaces:
 output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic" ,"github-token", f"--from-literal=token={GITHUB_TOKEN}"])
 
 # Create bizevent secrets
-output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
-output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
+# output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
+# output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-bizevent-oauth-details", f"--from-literal=dtTenant={DT_TENANT_LIVE}", f"--from-literal=oAuthClientID={DT_OAUTH_CLIENT_ID}", f"--from-literal=oAuthClientSecret={DT_OAUTH_CLIENT_SECRET}", f"--from-literal=accountURN={DT_OAUTH_ACCOUNT_URN}"])
 
 # Install argocd
 print(f"Installing argo cd version: {ARGOCD_VERSION}")
@@ -198,7 +198,7 @@ output = run_command(["kubectl", "apply", "-n", "argocd", "-f", "gitops/manifest
 
 # Create argocd-notifications-secret (delete if already there)
 output = run_command(["kubectl", "-n", "argocd", "delete", "secret", "argocd-notifications-secret", "--ignore-not-found"])
-output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic", "argocd-notifications-secret", f"--from-literal=dynatrace-url={DT_TENANT_LIVE}", f"--from-literal=dynatrace-token={DT_ALL_INGEST_TOKEN}"])
+# output = run_command(["kubectl", "-n", "argocd", "create", "secret", "generic", "argocd-notifications-secret", f"--from-literal=dynatrace-url={DT_TENANT_LIVE}", f"--from-literal=dynatrace-token={DT_ALL_INGEST_TOKEN}"])
 output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=0"])
 output = run_command(["kubectl", "-n", "argocd", "scale", "deploy/argocd-notifications-controller", "--replicas=1"])
 
@@ -237,47 +237,47 @@ ARGOCD_TOKEN = run_command(["argocd", "account", "generate-token", "--account", 
 if ARGOCD_TOKEN is None or ARGOCD_TOKEN == "":
     exit(f"ARGOCD_TOKEN is empty: {ARGOCD_TOKEN}. Cannot proceed!")
 
-# create dt-details secret in opentelemetry namespace
-output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-details", f"--from-literal=DT_URL={DT_TENANT_LIVE}", f"--from-literal=DT_OTEL_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"])
+# # create dt-details secret in opentelemetry namespace
+# output = run_command(["kubectl", "-n", "opentelemetry", "create", "secret", "generic", "dt-details", f"--from-literal=DT_URL={DT_TENANT_LIVE}", f"--from-literal=DT_OTEL_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"])
 
-# create backstage-details secret in backstage namespace
-output = run_command(["kubectl", "-n", "backstage", "create", "secret", "generic", "backstage-secrets",
-                      f"--from-literal=BASE_DOMAIN={CODESPACE_NAME}",
-                      f"--from-literal=BACKSTAGE_PORT_NUMBER={BACKSTAGE_PORT_NUMBER}",
-                      f"--from-literal=ARGOCD_PORT_NUMBER={ARGOCD_PORT_NUMBER}",
-                      f"--from-literal=ARGOCD_TOKEN={ARGOCD_TOKEN}",
-                      f"--from-literal=GITHUB_TOKEN={GITHUB_TOKEN}",
-                      f"--from-literal=GITHUB_ORG={github_org}",
-                      f"--from-literal=GITHUB_REPO={GITHUB_REPO_NAME}",
-                      f"--from-literal=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN={GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
-                      f"--from-literal=DT_TENANT_NAME={DT_ENV_NAME}",
-                      f"--from-literal=DT_TENANT_LIVE={DT_TENANT_LIVE}",
-                      f"--from-literal=DT_TENANT_APPS={DT_TENANT_APPS}",
-                      f"--from-literal=DT_SSO_TOKEN_URL={DT_SSO_TOKEN_URL}",
-                      f"--from-literal=DT_OAUTH_CLIENT_ID={DT_OAUTH_CLIENT_ID}",
-                      f"--from-literal=DT_OAUTH_CLIENT_SECRET={DT_OAUTH_CLIENT_SECRET}",
-                      f"--from-literal=DT_OAUTH_ACCOUNT_URN={DT_OAUTH_ACCOUNT_URN}",
-                      f"--from-literal=DT_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"
-                    ])
-# Create secret for OneAgent in dynatrace namespace
-output = run_command([
-    "kubectl", "-n", "dynatrace", "create", "secret", "generic", "platform-engineering-demo",
-    f"--from-literal=apiToken={DT_OP_TOKEN}",
-    f"--from-literal=dataIngestToken={DT_ALL_INGEST_TOKEN}"
-    ])
+# # create backstage-details secret in backstage namespace
+# output = run_command(["kubectl", "-n", "backstage", "create", "secret", "generic", "backstage-secrets",
+#                       f"--from-literal=BASE_DOMAIN={CODESPACE_NAME}",
+#                       f"--from-literal=BACKSTAGE_PORT_NUMBER={BACKSTAGE_PORT_NUMBER}",
+#                       f"--from-literal=ARGOCD_PORT_NUMBER={ARGOCD_PORT_NUMBER}",
+#                       f"--from-literal=ARGOCD_TOKEN={ARGOCD_TOKEN}",
+#                       f"--from-literal=GITHUB_TOKEN={GITHUB_TOKEN}",
+#                       f"--from-literal=GITHUB_ORG={github_org}",
+#                       f"--from-literal=GITHUB_REPO={GITHUB_REPO_NAME}",
+#                       f"--from-literal=GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN={GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}",
+#                       f"--from-literal=DT_TENANT_NAME={DT_ENV_NAME}",
+#                       f"--from-literal=DT_TENANT_LIVE={DT_TENANT_LIVE}",
+#                       f"--from-literal=DT_TENANT_APPS={DT_TENANT_APPS}",
+#                       f"--from-literal=DT_SSO_TOKEN_URL={DT_SSO_TOKEN_URL}",
+#                       f"--from-literal=DT_OAUTH_CLIENT_ID={DT_OAUTH_CLIENT_ID}",
+#                       f"--from-literal=DT_OAUTH_CLIENT_SECRET={DT_OAUTH_CLIENT_SECRET}",
+#                       f"--from-literal=DT_OAUTH_ACCOUNT_URN={DT_OAUTH_ACCOUNT_URN}",
+#                       f"--from-literal=DT_ALL_INGEST_TOKEN={DT_ALL_INGEST_TOKEN}"
+#                     ])
+# # Create secret for OneAgent in dynatrace namespace
+# output = run_command([
+#     "kubectl", "-n", "dynatrace", "create", "secret", "generic", "platform-engineering-demo",
+#     f"--from-literal=apiToken={DT_OP_TOKEN}",
+#     f"--from-literal=dataIngestToken={DT_ALL_INGEST_TOKEN}"
+#     ])
 
-# Create monaco-secret in monaco namespace
-output = run_command(["kubectl", "-n", "monaco", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
-# Create monaco-secret in dynatrace namespace
-output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
+# # Create monaco-secret in monaco namespace
+# output = run_command(["kubectl", "-n", "monaco", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
+# # Create monaco-secret in dynatrace namespace
+# output = run_command(["kubectl", "-n", "dynatrace", "create", "secret", "generic", "monaco-secret", f"--from-literal=monacoToken={DT_MONACO_TOKEN}"])
 
-# Wait for backstage deployment to be created
-wait_for_artifact_to_exist(namespace="backstage", artifact_type="deployment", artifact_name="backstage")
+# # Wait for backstage deployment to be created
+# wait_for_artifact_to_exist(namespace="backstage", artifact_type="deployment", artifact_name="backstage")
 
-# backstage deployment is ready
-# restart backstage to pick up secret and start successfully
-output = run_command(["kubectl", "-n", "backstage", "rollout", "restart", "deployment/backstage"])
-output = run_command(["kubectl", "-n", "backstage", "rollout", "status", "deployment/backstage", f"--timeout={STANDARD_TIMEOUT}"])
+# # backstage deployment is ready
+# # restart backstage to pick up secret and start successfully
+# output = run_command(["kubectl", "-n", "backstage", "rollout", "restart", "deployment/backstage"])
+# output = run_command(["kubectl", "-n", "backstage", "rollout", "status", "deployment/backstage", f"--timeout={STANDARD_TIMEOUT}"])
 
-# Send startup ping
-send_startup_ping()
+# # Send startup ping
+# send_startup_ping()
