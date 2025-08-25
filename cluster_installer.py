@@ -81,15 +81,15 @@ output = run_command(["kind", "delete", "cluster"])
 # eg. "https://abc12345.live.dynatrace.com"
 # Push = False for the first set
 # because we push on the final git commit
-do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_LIVE_PLACEHOLDER", replace_string=DT_TENANT_LIVE, recursive=True)
-do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_LIVE_PLACEHOLDER", replace_string=DT_TENANT_LIVE, recursive=True)
-git_commit(target_file="-A", commit_msg="update DT_TENANT_LIVE_PLACEHOLDER", push=False)
+# do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_LIVE_PLACEHOLDER", replace_string=DT_TENANT_LIVE, recursive=True)
+# do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_LIVE_PLACEHOLDER", replace_string=DT_TENANT_LIVE, recursive=True)
+# git_commit(target_file="-A", commit_msg="update DT_TENANT_LIVE_PLACEHOLDER", push=False)
 
-# Find and replace DT_TENANT_APPS_PLACEHOLDER with real text eg. "https://abc12345.live.apps.dynatrace.com"
-do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
-do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
-do_file_replace(pattern="./apptemplates/docs/*.md", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=False)
-git_commit(target_file="-A", commit_msg="update DT_TENANT_APPS_PLACEHOLDER", push=False)
+# # Find and replace DT_TENANT_APPS_PLACEHOLDER with real text eg. "https://abc12345.live.apps.dynatrace.com"
+# do_file_replace(pattern="./**/*.y*ml", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
+# do_file_replace(pattern="./**/*.json", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=True)
+# do_file_replace(pattern="./apptemplates/docs/*.md", find_string="DT_TENANT_APPS_PLACEHOLDER", replace_string=DT_TENANT_APPS, recursive=False)
+# git_commit(target_file="-A", commit_msg="update DT_TENANT_APPS_PLACEHOLDER", push=False)
 
 # Find and replace GITHUB_DOT_COM_REPO_PLACEHOLDER with real text eg. "https://github.com/yourOrg/yourRepo.git"
 do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_DOT_COM_REPO_PLACEHOLDER", replace_string=GITHUB_DOT_COM_REPO, recursive=True)
@@ -97,9 +97,9 @@ do_file_replace(pattern="./**/*.json", find_string="GITHUB_DOT_COM_REPO_PLACEHOL
 git_commit(target_file="-A", commit_msg="update GITHUB_DOT_COM_REPO_PLACEHOLDER", push=False)
 
 # Find and replace GEOLOCATION_PLACEHOLDER with real text. eg. "GEOLOCATION-0A41430434C388A9"
-do_file_replace(pattern="./**/*.y*ml", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
-do_file_replace(pattern="./**/*.json", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
-git_commit(target_file="-A", commit_msg="update GEOLOCATION_PLACEHOLDER", push=False)
+# do_file_replace(pattern="./**/*.y*ml", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
+# do_file_replace(pattern="./**/*.json", find_string="GEOLOCATION_PLACEHOLDER", replace_string=DT_GEOLOCATION, recursive=True)
+# git_commit(target_file="-A", commit_msg="update GEOLOCATION_PLACEHOLDER", push=False)
 
 # Find and replace GITHUB_REPOSITORY_PLACEHOLDER with real text. eg "yourOrg/yourRepo"
 do_file_replace(pattern="./**/*.y*ml", find_string="GITHUB_REPOSITORY_PLACEHOLDER", replace_string=GITHUB_ORG_SLASH_REPOSITORY, recursive=True)
